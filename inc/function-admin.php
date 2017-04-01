@@ -19,7 +19,9 @@ function motsach_add_admin_page(){
     
     // Generate sub admin page
     add_submenu_page( 'van_motsach', 'MotSach Theme Options', 'Theme Options', 'manage_options', 'van_motsach_theme', 'motsach_theme_support_page' );
+    add_submenu_page( 'van_motsach', 'MotSach Contact Form Options', 'Contact Form', 'manage_options', 'van_motsach_theme_contact', 'motsach_contact_form_page' );
     add_submenu_page( 'van_motsach', 'MotSach CSS Options', 'Custom CSS', 'manage_options', 'van_motsach_css', 'motsach_theme_css_page' );
+    
 
 }
 
@@ -43,6 +45,11 @@ function motsach_theme_create_page(){
 function motsach_theme_css_page(){
     echo '<h1>CSS page - Admin sub page</h1>';
 }
+
+function motsach_contact_form_page(){
+    require_once( get_template_directory(). '/inc/templates/motsach-contact-form.php' );
+}
+
 //
 
 
@@ -67,22 +74,46 @@ function motsach_custom_settings(){
     //
 
     //Theme support options
-    register_setting( 'motsach-theme-support', 'post_formats', 'motsach_post_formats_callback' );
+    register_setting( 'motsach-theme-support', 'post_formats' );
+    register_setting( 'motsach-theme-support', 'custom_header' );
+    register_setting( 'motsach-theme-support', 'custom_background' );
 
     add_settings_section( 'motsach-theme-options', 'Theme Options', 'motsach_theme_options', 'van_motsach_theme' );
 
     add_settings_field( 'post-formats', 'Post Formats', 'motsach_post_formats', 'van_motsach_theme', 'motsach-theme-options' );
+    add_settings_field( 'custom-header', 'Custom Header', 'motsach_custom_header', 'van_motsach_theme', 'motsach-theme-options' );
+    add_settings_field( 'custom-background', 'Custom Background', 'motsach_custom_background', 'van_motsach_theme', 'motsach-theme-options' );
     //
+
+    //Contact Form Options
+    register_setting( 'motsach-contact-options', 'activate_contact' );
+
+    add_settings_section( 'motsach-contact-group', 'Contact Form', 'motsach_contact_section', 'van_motsach_theme_contact' );
+
+    add_settings_field( 'contact-form-activate', 'Activate Contact Form', 'motsach_activate_contact_form', 'van_motsach_theme_contact', 'motsach-contact-group' );
 }
+
+//Contact Form Options functions
+function motsach_contact_section() {
+    echo 'Activate/Deactivate the built in contact form options';
+}
+
+function motsach_activate_contact_form() {
+    $options = get_option( 'activate_contact' );
+    $checked = ( $options == 1 ? 'checked' : '');
+    $output = '<label><input id="activate_contact" type="checkbox" name="activate_contact" value="1" '.$checked.'/></label><br>';
+
+    echo $output;
+}
+
+
+
 
 //Theme support options functions
-function motsach_post_formats_callback( $input ){
-    #var_dump($input) ;
-    return $input;
-}
+
 
 function motsach_theme_options(){
-    echo 'activate theme support';
+    echo 'Activate/Deactivate theme support options';
 }
 
 function motsach_post_formats(){
@@ -95,6 +126,22 @@ function motsach_post_formats(){
     }
     echo $output;
 }
+
+function motsach_custom_header(){
+    $options = get_option( 'custom_header' );
+    $checked = ( $options == 1 ? 'checked' : '');
+    $output = '<label><input id="custom_header" type="checkbox" name="custom_header" value="1" '.$checked.'/>Activate Custom Header </label><br>';
+
+    echo $output;
+}
+
+function motsach_custom_background(){
+    $options = get_option( 'custom_background' );
+    $checked = ( $options == 1 ? 'checked' : '');
+    $output = '<label><input id="custom_background" type="checkbox" name="custom_background" value="1" '.$checked.'/>Activate Custom Back Ground </label>';
+
+    echo $output;
+}
 //
 
 
@@ -105,7 +152,12 @@ function motsach_sidebar_options(){
 
 function motsach_sidebar_profile(){
     $picture = esc_attr(get_option( 'profile_picture' ));
-    echo '<input type="button" value="Upload Profile Picture" id="upload-button" class="button button-secondary"/><input type="hidden" id="profile-picture" name="profile_picture" value="'.$picture.'"/>';
+    if( empty($picture) ){
+        echo '<input type="button" value="Upload Profile Picture" id="upload-button" class="button button-secondary"/><input type="hidden" id="profile-picture" name="profile_picture" value="'.$picture.'"/>';
+    } else {
+        echo '<input type="button" value="Replace Profile Picture" id="upload-button" class="button button-secondary"/><input type="hidden" id="profile-picture" name="profile_picture" value="'.$picture.'"/><input type="button" value="Remove" id="motsach-remove-profile-picture" class="button button-secondary"/>';
+    }
+
 }
 
 function motsach_sidebar_name(){

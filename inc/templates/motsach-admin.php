@@ -22,5 +22,5 @@
 <form method="post" action="options.php" class="motsach-general-form">  
     <?php settings_fields('motsach-settings-group'); ?>
     <?php do_settings_sections( 'van_motsach' ); ?>
-    <?php submit_button();?>
+    <?php submit_button( 'Save Changes', 'primary', 'btnSubmitMotsachSidebarPage' );?>
 </form>

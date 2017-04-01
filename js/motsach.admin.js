@@ -4,6 +4,7 @@ jQuery(document).ready(function($){
 
     $( '#upload-button' ).on('click',function(e){
         e.preventDefault();
+        
         if( mediaUploader ){
             mediaUploader.open();
             return;
@@ -27,4 +28,15 @@ jQuery(document).ready(function($){
 
     });
 
-});
+    $( '#motsach-remove-profile-picture' ).on('click', function(e){
+        e.preventDefault();
+        answer = confirm('Do you want to remove profile picture?');
+        if ( answer ){
+            $('#profile-picture').val('');
+            $('.motsach-general-form').submit();
+            //$('#profile-picture-preview').css('background-image', 'url()');
+        }
+
+
+    });
+})
