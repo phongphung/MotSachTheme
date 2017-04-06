@@ -43,7 +43,7 @@ function motsach_theme_create_page(){
 }
 
 function motsach_theme_css_page(){
-    echo '<h1>CSS page - Admin sub page</h1>';
+    require_once( get_template_directory(). '/inc/templates/motsach-custom-css.php' );
 }
 
 function motsach_contact_form_page(){
@@ -91,7 +91,36 @@ function motsach_custom_settings(){
     add_settings_section( 'motsach-contact-group', 'Contact Form', 'motsach_contact_section', 'van_motsach_theme_contact' );
 
     add_settings_field( 'contact-form-activate', 'Activate Contact Form', 'motsach_activate_contact_form', 'van_motsach_theme_contact', 'motsach-contact-group' );
+    //
+
+    //Custom CSS Options
+    register_setting( 'motsach-custom-css-options', 'motsach_css', 'motsach_custom_css_sanitization' );
+
+    add_settings_section( 'motsach-custom-css-section', 'Custom CSS', 'mot_sach_custom_css_section_callback', 'van_motsach_css' );
+
+    add_settings_field( 'custom-css', 'Insert your custom css', 'motsach_custom_css_callback', 'van_motsach_css', 'motsach-custom-css-section' );
 }
+
+//Custom CSS options fuctions
+function mot_sach_custom_css_section_callback(){
+    echo 'Customize your theme with your own css';
+}
+
+function motsach_custom_css_callback(){
+    $css = get_option( 'motsach_css' );
+    $css = ( empty($css)? '/* MotSach Theme Custom CSS */': $css );
+    echo '<div id="customCss" style="visibility:hidden">' . $css . '</div> <textarea id="motsach_css" name="motsach_css" style="display:none; visibility:hidden">' . $css . '</textarea>';
+
+
+}
+
+function motsach_custom_css_sanitization( $input ){
+    $output = esc_textarea( $input );
+    return $output;
+}
+
+//
+
 
 //Contact Form Options functions
 function motsach_contact_section() {
