@@ -2,7 +2,7 @@
 
 /*
 
-@package motsach-theme
+@package motsach_theme
 
    =================================
        ADMIN PAGE
